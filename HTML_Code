@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  /* 外層容器樣式 */
+  .button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 40px 0; /* 可根據需要調整間距 */
+  }
+
+  /* 原始按鈕樣式 */
+  .patreon-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #e87722, #f48228);
+    border-radius: 50px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(232, 119, 34, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: glow-pulse 4s infinite ease-in-out;
+    overflow: hidden;
+  }
+
+  .patreon-button:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 15px rgba(232, 119, 34, 0.5);
+    animation: none;
+  }
+
+  .patreon-logo svg {
+    display: block;
+    fill: white;
+    transition: transform 0.3s ease-in-out;
+    animation: logo-bounce 4s infinite ease-in-out alternate-reverse;
+  }
+  
+  .patreon-text {
+    letter-spacing: -0.5px;
+  }
+
+  @keyframes glow-pulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 8px rgba(232, 119, 34, 0.4);
+    }
+    50% {
+      transform: scale(1.02);
+      box-shadow: 0 0 16px rgba(232, 119, 34, 0.6);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 8px rgba(232, 119, 34, 0.4);
+    }
+  }
+
+  @keyframes logo-bounce {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-2px); }
+    100% { transform: translateY(0); }
+  }
+
+  .patreon-button[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    animation: fadeIn 0.3s forwards;
+  }
+  
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  .patreon-button::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: 2px solid rgba(255, 255, 255, 0);
+    border-radius: 50px;
+    pointer-events: none;
+  }
+
+  .patreon-button:hover::before {
+    border-color: rgba(255, 255, 255, 0.6);
+    animation: border-flash 0.6s forwards;
+  }
+
+  @keyframes border-flash {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1.1); opacity: 0; }
+  }
+
+  .ripple, .ripple2 {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  
+  .ripple {
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple-effect 0.6s linear;
+  }
+  
+  @keyframes ripple-effect {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(15); opacity: 0; }
+  }
+
+  .ripple2 {
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: ripple-effect2 0.9s linear;
+  }
+  
+  @keyframes ripple-effect2 {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(20); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 完整按鈕結構 -->
+<div class="button-container">
+  <a href="https://patreon.com/mriwu_u" class="patreon-button" data-tooltip="加入 Patreon，獲得獨家福利！">
+    <span class="patreon-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15.386.524c-4.764 0-8.64 3.876-8.64 8.64 0 4.75 3.876 8.613 8.64 8.613 4.75 0 8.614-3.864 8.614-8.613C24 4.4 20.136.524 15.386.524M.003 23.537h4.22V.524H.003"/>
+      </svg>
+    </span>
+    <span class="patreon-text">Support me on Patreon</span>
+  </a>
+</div>
+
+<script>
+  document.querySelectorAll('.patreon-button').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      var rect = btn.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+      
+      ['ripple', 'ripple2'].forEach((rippleClass, i) => {
+        var circle = document.createElement('span');
+        circle.classList.add(rippleClass);
+        circle.style.left = x + 'px';
+        circle.style.top = y + 'px';
+        btn.appendChild(circle);
+        setTimeout(() => {
+          circle.remove();
+        }, (rippleClass === 'ripple' ? 600 : 900));
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
